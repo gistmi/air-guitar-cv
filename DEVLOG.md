@@ -34,4 +34,5 @@
 - **Bugs hit & fixed:**
   - Broken `venv` / `WSL: Ubuntu` interpreter mismatch in VS Code -> rebuilt clean Windows `venv` via PowerShell and kept VS Code local on Windows while using WSL for Git.
   - `key` variable undefined when adding `'c'` clear shortcut -> stored `key = cv2.waitKey(1) & 0xFF` once per frame.
+  - Pinch detection failing in areas cluttered with existing strings -> realized saved cyan strings were being drawn on `frame` *before* `detector.detect_for_video()`, visually obscuring fingers from MediaPipe's AI; moved all `cv2.line()` drawing calls *after* hand detection.
 - **Terms learned:** `math.hypot(dx, dy)` (Euclidean pixel distance), state variables outside the `while` loop, list `.append()` & `.clear()`, `cv2.line()`.

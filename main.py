@@ -59,10 +59,6 @@ while cap.isOpened():
     # Flip the photo horizontally (1 = mirror mode, 0 = upside down)
     frame = cv2.flip(frame, 1)
 
-    # Always redraw all previously locked-in strings in Electric Cyan
-    for s_p1, s_p2 in strings:
-        cv2.line(frame, s_p1, s_p2, (255, 255, 0), 3)
-
     # 5. Convert OpenCV's BGR frame to RGB and wrap it in mp.Image
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     mp_image = mp.Image(image_format= mp.ImageFormat.SRGB, data = rgb_frame)
@@ -74,6 +70,9 @@ while cap.isOpened():
     # Run MediaPipe's neural network on the wrapped RGB frame at this timestamp to find hand joints
     detection_result = detector.detect_for_video(mp_image, timestamp_ms)
 
+    # Always redraw all previously locked-in strings in Electric Cyan
+    for s_p1, s_p2 in strings:
+        cv2.line(frame, s_p1, s_p2, (255, 255, 0), 3)
 
     # Check if MediaPipe detected at least one hand in the current frame
     if detection_result.hand_landmarks:

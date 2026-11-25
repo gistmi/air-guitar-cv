@@ -27,3 +27,11 @@
   - Monotonic millisecond timestamp (`int(time.time() * 1000)` required by `detect_for_video` to track motion across frames).
   - Normalized coordinates (`0.0` to `1.0` scaled by frame `w` and `h` to compute pixel coordinates `(cx, cy)`).
   - `cv2.circle()` (drawing filled joint markers in BGR color order).
+
+  ## Session 3: Pinch-to-Create & Stretch Indefinite Strings
+- **What I built:** Added dual-hand pinch detection (`Landmark 4` Thumb Tip + `Landmark 8` Index Fingertip), proximity-gated string creation (strings only spawn if both hands start pinching close together), real-time length stretching, and a persistent `strings` list so indefinite strings stay suspended in mid-air (`c` to clear).
+- **Why I did it this way:** Used Euclidean distance (`math.hypot`) to detect pinches (`< 40px`) and initial hand proximity (`< 120px`), plus cross-frame state variables (`is_creating_string`, `active_string`, `strings`) so strings persist after releasing the pinch.
+- **Bugs hit & fixed:**
+  - Broken `venv` / `WSL: Ubuntu` interpreter mismatch in VS Code -> rebuilt clean Windows `venv` via PowerShell and kept VS Code local on Windows while using WSL for Git.
+  - `key` variable undefined when adding `'c'` clear shortcut -> stored `key = cv2.waitKey(1) & 0xFF` once per frame.
+- **Terms learned:** `math.hypot(dx, dy)` (Euclidean pixel distance), state variables outside the `while` loop, list `.append()` & `.clear()`, `cv2.line()`.

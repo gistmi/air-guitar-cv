@@ -120,3 +120,54 @@
 - **Arguments:**
   - `c`: A 1-character string (e.g., `'q'`).
 - **Returns:** Integer code (`113` for `'q'`).
+
+## Session 3 Additions
+
+### 1. OpenCV (`cv2`) — Drawing Lines
+
+#### `cv2.line(img, pt1, pt2, color, thickness)`
+- **Purpose:** Draws a straight line segment onto an image frame (used to render active and locked-in virtual strings between pinch points).
+- **Arguments:**
+  - `img`: The image array (`frame`) to draw on.
+  - `pt1`: `(x1, y1)` tuple of integer pixel coordinates for the start point.
+  - `pt2`: `(x2, y2)` tuple of integer pixel coordinates for the end point.
+  - `color`: `(B, G, R)` color tuple (e.g., `(255, 0, 255)` for Neon Magenta, `(255, 255, 0)` for Electric Cyan).
+  - `thickness`: Line width in pixels (e.g., `3` or `4`).
+- **Returns:** The modified image array (`frame`).
+
+---
+
+### 2. Python `math` Module — Geometry & Distance
+
+#### `math.hypot(dx, dy)`
+- **Purpose:** Calculates the exact straight-line (Euclidean) distance $\sqrt{dx^2 + dy^2}$ between two 2D points (used to measure the pixel gap between Thumb Tip #4 and Index Tip #8, as well as the distance between both hands).
+- **Arguments:**
+  - `dx`: Horizontal pixel difference (`x2 - x1`).
+  - `dy`: Vertical pixel difference (`y2 - y1`).
+- **Returns:** Float representing the straight-line pixel distance between the two points.
+
+---
+
+### 3. Python Built-in List Methods & Operators
+
+#### `list.append(item)`
+- **Purpose:** Adds a single item onto the end of a Python list (used to record active pinch coordinates in `pinch_points` and save released strings into `strings`).
+- **Arguments:**
+  - `item`: Any object or tuple to add (e.g., `(pinch_x, pinch_y)` or `(p1, p2)`).
+- **Returns:** `None` (modifies the list in place).
+
+#### `list.clear()`
+- **Purpose:** Removes all items from a list at once (used when pressing `'c'` to wipe all saved strings off the screen).
+- **Arguments:** None.
+- **Returns:** `None` (empties the list in place).
+
+#### `len(collection)`
+- **Purpose:** Counts how many items are currently inside a list or sequence (used to check `len(pinch_points) == 2` so strings only form when both hands are pinching).
+- **Arguments:**
+  - `collection`: A list, tuple, or string.
+- **Returns:** Integer count of items in `collection`.
+
+#### `//` (Floor Division Operator)
+- **Purpose:** Divides two numbers and rounds down to the nearest whole integer (used in `(x1 + x2) // 2` to compute the exact integer pixel midpoint between thumb and index fingertips).
+- **Arguments:** Left and right numeric operands (`a // b`).
+- **Returns:** Integer quotient (when both operands are integers).

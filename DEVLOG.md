@@ -36,3 +36,13 @@
   - `key` variable undefined when adding `'c'` clear shortcut -> stored `key = cv2.waitKey(1) & 0xFF` once per frame.
   - Pinch detection failing in areas cluttered with existing strings -> realized saved cyan strings were being drawn on `frame` *before* `detector.detect_for_video()`, visually obscuring fingers from MediaPipe's AI; moved all `cv2.line()` drawing calls *after* hand detection.
 - **Terms learned:** `math.hypot(dx, dy)` (Euclidean pixel distance), state variables outside the `while` loop, list `.append()` & `.clear()`, `cv2.line()`.
+
+## Session 4: Karplus-Strong Audio Synthesis & Fingertip Plucking
+- **What I built:** Installed `numpy` and `sounddevice`, built a Karplus-Strong plucked-string synthesizer (`generate_plucked_wave`), mapped string pixel length to musical pitch (`length_to_freq`), and added point-to-segment fingertip pluck detection (`point_to_segment_dist`) with a per-string cooldown timer (`last_pluck`).
+- **Why I did it this way:** Pre-computed each string's audio wave once at creation using an in-place ring buffer (`i % N`) instead of calling `np.append()` inside the sample loop, eliminating memory-copy lag during live video; also switched OpenCV to `cv2.CAP_DSHOW` at `640x480` for smoother Windows webcam FPS.
+- **Bugs hit & fixed:**
+  - `AttributeError: module 'numpy' has no attribute 'zeroes'` -> fixed spelling to `np.zeros`.
+  - `ValueError: too many values to unpack` -> removed legacy tuple-unpacking draw loop after switching `strings` entries to 4-key dictionaries.
+  - Parentheses placement in `point_to_segment_dist` (`/ seg_len_sq` outside `min()`) and over-indented drawing loop -> fixed projection clamping and unindented string rendering so strings stay visible even when hands leave the frame.
+  - Severe frame lag from `np.append` inside a 52,920-step loop -> replaced with an in-place modulo ring buffer and cached each string's generated wave.
+- **Terms learned:** `SAMPLE_RATE` (`44100 Hz`), Karplus-Strong synthesis (noise burst + low-pass moving average + decay factor `0.996`), ring buffer (`i % N`), point-to-line-segment projection, and cooldown debouncing (`last_pluck`).

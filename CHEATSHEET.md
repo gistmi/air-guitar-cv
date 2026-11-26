@@ -171,3 +171,71 @@
 - **Purpose:** Divides two numbers and rounds down to the nearest whole integer (used in `(x1 + x2) // 2` to compute the exact integer pixel midpoint between thumb and index fingertips).
 - **Arguments:** Left and right numeric operands (`a // b`).
 - **Returns:** Integer quotient (when both operands are integers).
+
+## Session 4 Additions
+
+### 1. NumPy (`numpy` as `np`) — Audio Wave Arrays & Math
+
+#### `np.random.uniform(low, high, size)`
+- **Purpose:** Generates an array of random decimal numbers evenly spread between `low` and `high` (used to create the initial white-noise "pick snap" buffer in Karplus-Strong synthesis).
+- **Arguments:**
+  - `low`: Minimum float value (e.g., `-1.0`).
+  - `high`: Maximum float value (e.g., `1.0`).
+  - `size`: Integer count of random numbers to generate (`N`).
+- **Returns:** A 1D NumPy array of `size` random floats.
+
+#### `ndarray.astype(dtype)`
+- **Purpose:** Converts a NumPy array's data type (used to convert 64-bit floats into 32-bit floats `np.float32`, which audio drivers require).
+- **Arguments:**
+  - `dtype`: Target NumPy data type (e.g., `np.float32`).
+- **Returns:** A new NumPy array cast to `dtype`.
+
+#### `np.zeros(shape, dtype)`
+- **Purpose:** Creates a pre-allocated NumPy array filled with `0.0`s (used to hold the full `total_samples` audio waveform before filling it in the loop).
+- **Arguments:**
+  - `shape`: Integer length (or tuple of dimensions) of the array (e.g., `total_samples`).
+  - `dtype`: Data type of the zeros (e.g., `np.float32`).
+- **Returns:** A NumPy array of the given shape filled with zeros.
+
+---
+
+### 2. SoundDevice (`sounddevice` as `sd`) — Audio Playback
+
+#### `sd.play(data, samplerate)`
+- **Purpose:** Sends a 1D NumPy audio wave array to your default laptop speakers asynchronously (non-blocking) so the webcam loop keeps running smoothly.
+- **Arguments:**
+  - `data`: 1D NumPy array of `float32` audio samples in the range `[-1.0, 1.0]`.
+  - `samplerate`: Integer playback speed in samples per second (e.g., `44100`).
+- **Returns:** `None`.
+
+---
+
+### 3. OpenCV (`cv2`) — Windows Camera Backend & Resolution
+
+#### `cv2.VideoCapture(index, apiPreference)`
+- **Purpose:** Opens a camera device using a specific OS video driver backend for faster startup and frame rates on Windows.
+- **Arguments:**
+  - `index`: Integer camera ID (`0` = default webcam).
+  - `apiPreference`: Backend flag (e.g., `cv2.CAP_DSHOW` for Windows DirectShow).
+- **Returns:** A `VideoCapture` object (`cap`).
+
+#### `cap.set(propId, value)`
+- **Purpose:** Configures hardware capture properties such as frame width and height (`640x480`) to keep MediaPipe processing fast.
+- **Arguments:**
+  - `propId`: Property constant (e.g., `cv2.CAP_PROP_FRAME_WIDTH`, `cv2.CAP_PROP_FRAME_HEIGHT`).
+  - `value`: Numeric target value (e.g., `640` or `480`).
+- **Returns:** Boolean (`True` if the camera accepted the setting, `False` otherwise).
+
+---
+
+### 4. Python Built-ins & Operators (`max`, `min`, `%`)
+
+#### `max(a, b)` & `min(a, b)`
+- **Purpose:** Returns the largest or smallest of the given arguments (combined as `max(low, min(high, val))` to clamp string lengths between `60` and `450` pixels and projection values between `0.0` and `1.0`).
+- **Arguments:** Two or more comparable numbers.
+- **Returns:** The maximum or minimum value.
+
+#### `%` (Modulo / Remainder Operator)
+- **Purpose:** Returns the remainder after integer division (`i % N`), wrapping a growing counter neatly around `0` to `N - 1` so an array acts as a circular **ring buffer** without copying memory.
+- **Arguments:** Dividend `i` and divisor `N` (`i % N`).
+- **Returns:** Integer remainder in the range `[0, N - 1]`.
